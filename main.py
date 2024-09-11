@@ -10,22 +10,39 @@ def main():
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
 
-    player_x = SCREEN_WIDTH / 2
-    player_y = SCREEN_HEIGHT / 2
-
     pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
     dt = 0
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    # Create game objects
+    player_x = SCREEN_WIDTH / 2     # starting position
+    player_y = SCREEN_HEIGHT / 2    # starting position
     player = Player(player_x, player_y)
+
+    # Create groups
+    updatables = pygame.sprite.Group()
+    drawables = pygame.sprite.Group()
+
+    # Add game objects to groups
+    updatables.add(player)
+    drawables.add(player)
     
     # Start game loop
     while True:
+        # Events that happend each iteration before rendering
         screen.fill("#000000")
-        player.draw(screen)
+        
+        for obj in updatables:
+            obj.update(dt)
+
+        for obj in drawables:
+            obj.draw(screen)
+
+        # Render
         pygame.display.flip()
 
+        # Catch events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
